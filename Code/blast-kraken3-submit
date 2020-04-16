@@ -1,0 +1,40 @@
+#!/bin/bash -l
+#
+#Number of cores requested, make sure its more than blast needs
+#$ -pe omp 16
+#$ -l mem_per_core=16G
+
+#Give the name to the job
+#$ -N kraken_blast3
+
+#Send an email when the job is finished (or aborted)
+#$ -M vrapela@students.stonehill.edu
+#$ -m ae
+
+#Join the error and output file
+#$ -j y
+
+
+# Set the runtime limit (default 12 hours):
+#$ -l h_rt=12:00:00
+
+# Specify your project
+#$ -P ct-shbioinf
+
+
+# Stuff to execute: 
+
+module load blast+ #load blast module
+module load R/3.6.2 #load R3.6.2
+module load sratoolkit
+
+cd /projectnb/ct-shbioinf/vrapela/Kraken2_compare #use your notes or project folder. Wherever your script is located
+
+mkdir /scratch/$USER
+cp -R /projectnb/ct-shbioinf/kdb /scratch/$USER/kdb
+
+Rscript 'Code/kraken-blast-its2.R' #run the script
+
+rm -R /scratch/$USER/kdb
+
+
